@@ -10,15 +10,14 @@ class Lookbook extends Controller
 {
     public function index()
     {
-        // Dashboard: always all-time stats (not filtered)
         $all = LogIt::all();
         $stats = [
-            'total'       => $all->count(),
-            'selesai'     => $all->where('status', 'Selesai')->count(),
-            'proses'      => $all->where('status', 'Proses')->count(),
-            'batal'       => $all->where('status', 'Batal')->count(),
-            'hardware'    => $all->where('kategori', 'Hardware')->count(),
-            'software'    => $all->where('kategori', 'Software')->count(),
+            'total' => $all->count(),
+            'selesai' => $all->where('status', 'Selesai')->count(),
+            'proses' => $all->where('status', 'Proses')->count(),
+            'batal' => $all->where('status', 'Batal')->count(),
+            'hardware' => $all->where('kategori', 'Hardware')->count(),
+            'software' => $all->where('kategori', 'Software')->count(),
             'pembersihan' => $all->where('kategori', 'Pembersihan')->count(),
         ];
 
@@ -35,8 +34,22 @@ class Lookbook extends Controller
 
         $logs = $query->get();
 
-        $hardwareParts = ['Motherboard', 'Processor', 'RAM', 'PSU', 'Kipas Prosesor',
-                          'Harddisk / SSD', 'VGA Card', 'Kabel Power / SATA', 'Monitor', 'Keyboard / Mouse', 'Cek Jaringan'];
+        $hardwareParts = [
+            'Motherboard',
+            'Processor',
+            'RAM',
+            'PSU',
+            'Kipas Prosesor',
+            'Harddisk / SSD',
+            'VGA Card',
+            'Kabel Power / SATA',
+            'Monitor',
+            'Keyboard / Mouse',
+            'Cek Jaringan',
+            'Printer',
+            'Upgrade CPU',
+            'Lainnya',
+        ];
 
         return view('lookbook_data', compact('logs', 'hardwareParts'));
     }
@@ -49,7 +62,7 @@ class Lookbook extends Controller
 
     public function create()
     {
-        return redirect()->route('lookbook.index'); // Disabled since using modal
+        return redirect()->route('lookbook.index'); 
     }
 
     public function store(Request $request)
@@ -70,11 +83,11 @@ class Lookbook extends Controller
 
         $log->user_id = \Illuminate\Support\Facades\Auth::id();
         $log->status = $request->status;
-        
+
         if ($request->hasFile('foto')) {
             $log->foto = $request->file('foto')->store('evidence', 'public');
         }
-        
+
         $log->save();
 
         return redirect()->route('lookbook.data')->with('success', 'Data logbook berhasil ditambahkan.');
@@ -82,7 +95,7 @@ class Lookbook extends Controller
 
     public function edit($id)
     {
-        return redirect()->route('lookbook.index'); // Disabled since using modal
+        return redirect()->route('lookbook.index');
     }
 
     public function update(Request $request, $id)
@@ -93,7 +106,7 @@ class Lookbook extends Controller
         if ($request->kategori == 'Hardware') {
             $log->item = is_array($request->item) ? implode(', ', $request->item) : $request->item;
             $log->aktivitas = $request->aktivitas;
-            $log->unit = null; // Clear if category changed
+            $log->unit = null;
             $log->ttd = null;
         } elseif ($request->kategori == 'Software') {
             $log->item = $request->item;
@@ -110,14 +123,14 @@ class Lookbook extends Controller
         }
 
         $log->status = $request->status;
-        
+
         if ($request->hasFile('foto')) {
             if ($log->foto && \Illuminate\Support\Facades\Storage::disk('public')->exists($log->foto)) {
                 \Illuminate\Support\Facades\Storage::disk('public')->delete($log->foto);
             }
             $log->foto = $request->file('foto')->store('evidence', 'public');
         }
-        
+
         $log->save();
 
         return redirect()->route('lookbook.data')->with('success', 'Data logbook berhasil diupdate.');
@@ -128,8 +141,7 @@ class Lookbook extends Controller
         $log = LogIt::find($id);
         $log->delete();
 
-        // Returning JSON for datatables/ajax delete, but keeping standard redirect fallback
-        if(request()->ajax()) {
+        if (request()->ajax()) {
             return response()->json(['success' => 'Data berhasil dihapus']);
         }
         return redirect()->route('lookbook.data')->with('success', 'Data logbook berhasil dihapus.');

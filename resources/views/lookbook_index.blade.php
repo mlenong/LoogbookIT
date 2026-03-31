@@ -158,7 +158,7 @@
 @section('scripts')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-    $(document).on('turbo:load', function () {
+    $(function () {
         var canvas = document.getElementById('pieChart');
         if (!canvas) return; // Prevent error on other pages
 

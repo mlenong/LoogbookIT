@@ -22,8 +22,6 @@
   <!-- Theme style AdminLTE -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
 
-  <!-- Turbo (SPA-like navigation) -->
-  <script src="https://cdn.jsdelivr.net/npm/@hotwired/turbo@7.3.0/dist/turbo.es2017-umd.js"></script>
 
   @yield('styles')
 </head>
@@ -164,15 +162,13 @@
   <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
 
   <script>
-    // Handle AdminLTE re-initialization on Turbo navigation
-    document.addEventListener("turbo:load", function() {
-      // Re-initialize AdminLTE Sidebar/PushMenu if needed
-      if (typeof $.fn.PushMenu !== 'undefined') {
-        $('[data-widget="pushmenu"]').PushMenu('init');
-      }
-      if (typeof $.fn.Treeview !== 'undefined') {
-        $('[data-widget="treeview"]').Treeview('init');
-      }
+    $(document).ready(function() {
+      // Small timeout to ensure AdminLTE is ready
+      setTimeout(function() {
+        if (typeof $.fn.Treeview !== 'undefined') {
+          $('[data-widget="treeview"]').Treeview('init');
+        }
+      }, 100);
     });
   </script>
 

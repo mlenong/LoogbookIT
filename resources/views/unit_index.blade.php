@@ -28,7 +28,7 @@
         </div>
         </div>
         <div class="card-body">
-        <table id="unitTable" class="table table-bordered table-striped table-hover">
+        <table id="unitTable" class="table table-bordered table-striped table-hover" style="width:100%">
             <thead class="bg-dark text-white">
             <tr>
                 <th style="width: 5%">No</th>
@@ -161,19 +161,18 @@
             if (res.isConfirmed) {
                 $.ajax({ url: url, type: 'DELETE', data: { _token: '{{ csrf_token() }}' },
                     success: function() { 
-                        if (typeof Turbo !== 'undefined') Turbo.visit(window.location.href, { action: 'replace' });
-                        else location.reload();
+                        location.reload();
                     }
                 });
             }
         });
     });
 
-    $(document).on('turbo:load', function() {
+    $(function() {
         if ($('#unitTable').length > 0) {
             $('#unitTable').DataTable({
                 "responsive": true, "autoWidth": false,
-                "destroy": true, // Critical for Turbo
+                "destroy": true, // Critical for standard load
                 "language": { url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/id.json' }
             });
 

@@ -78,7 +78,7 @@
                 </div>
 
                 <div class="card-body pt-0">
-                    <table id="lookbookTable" class="table table-bordered table-striped table-hover">
+                    <table id="lookbookTable" class="table table-bordered table-striped table-hover" style="width:100%">
                         <thead class="bg-dark text-white">
                             <tr>
                                 <th style="width:5%">No</th>
@@ -206,8 +206,7 @@
                             <select name="item" id="add_sw_item" class="custom-select" disabled>
                                 <option value="">-- Pilih Aplikasi --</option>
                                 <option value="RME">RME</option>
-                                <option value="Billing kasir">Billing Kasir</option>
-                                <option value="billing farmasi">Billing Farmasi</option>
+                                <option value="Billing">Billing</option>
                                 <option value="esdm">ESDM</option>
                                 <option value="lainya">Lainya</option>
                             </select>
@@ -300,8 +299,7 @@
                                 <select name="item" id="edit_sw_item" class="custom-select" disabled>
                                     <option value="">-- Pilih Aplikasi --</option>
                                     <option value="RME">RME</option>
-                                    <option value="Billing kasir">Billing kasir</option>
-                                    <option value="billing farmasi">billing farmasi</option>
+                                    <option value="Billing">Billing</option>
                                     <option value="esdm">esdm</option>
                                     <option value="lainya">lainya</option>
                                 </select>
@@ -421,8 +419,7 @@
                     $.ajax({
                         url: url, type: 'DELETE', data: { _token: '{{ csrf_token() }}' },
                         success: () => {
-                            if (typeof Turbo !== 'undefined') Turbo.visit(window.location.href, { action: 'replace' });
-                            else location.reload();
+                            location.reload();
                         }
                     });
                 }
@@ -445,15 +442,15 @@
             else if (cat === 'Pembersihan') { $(`#${prefix}_section-pembersihan`).fadeIn(); $(`#${prefix}_unit`).prop('disabled', false); }
         }
 
-        $(document).on('turbo:load', function () {
+        $(function () {
             if ($('#lookbookTable').length > 0) {
                 $('#lookbookTable').DataTable({
-                    "responsive": true, "autoWidth": false, "destroy": true, // Critical for Turbo
+                    "responsive": true, "autoWidth": false, "destroy": true, // Critical for standard load
                     "language": { url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/id.json' }
                 });
 
                 const Toast = Swal.mixin({ toast: true, position: 'top-end', showConfirmButton: false, timer: 3000 });
-                        @if(session('success')) Toast.fire({ icon: 'success', title: '{{ session('success') }}' }); @endif
+                            @if(session('success')) Toast.fire({ icon: 'success', title: '{{ session('success') }}' }); @endif
 
                 function initSelectAjax(selector, modalId) {
                     $(selector).select2({

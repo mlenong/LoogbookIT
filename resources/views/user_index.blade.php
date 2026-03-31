@@ -30,7 +30,7 @@
         </div>
         <!-- /.card-header -->
         <div class="card-body">
-          <table id="userTable" class="table table-bordered table-striped table-hover">
+          <table id="userTable" class="table table-bordered table-striped table-hover" style="width:100%">
             <thead class="bg-dark text-white">
               <tr>
                 <th style="width: 5%">No</th>
@@ -201,8 +201,7 @@
             data: { _token: '{{ csrf_token() }}' },
             success: function (response) {
               Swal.fire({ icon: 'success', title: response.success }).then(() => {
-                if (typeof Turbo !== 'undefined') Turbo.visit(window.location.href, { action: 'replace' });
-                else location.reload();
+                location.reload();
               });
             },
             error: function () {
@@ -213,11 +212,11 @@
       });
     });
 
-    $(document).on('turbo:load', function () {
+    $(function () {
       if ($('#userTable').length > 0) {
         $('#userTable').DataTable({
           "paging": true, "lengthChange": true, "searching": true, "ordering": true, "info": true, "autoWidth": false, "responsive": true,
-          "destroy": true, // Critical for Turbo
+          "destroy": true, // Critical for standard load
           "language": { url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/id.json' }
         });
 
